@@ -5,6 +5,8 @@ const cors = require('cors');
 const path = require('path');
 const session = require('express-session');
 const flash = require('connect-flash');
+const multer = require('multer');
+
 
 // Body parser middleware
 app.use(bodyParser.json());
@@ -29,26 +31,42 @@ app.use(session({
 }));
 
 
-
 // Flash middleware
 app.use(flash());
 
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+// Set Storage Engine
+const storage = multer.diskStorage({
+    destination: './uploads/',
+    filename: function (req, file, cb) {
+        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+    }
+});
 
-// Attach user information to res.locals for use in EJS templates
-// app.use((req, res, next) => {
+// Initialize Upload
+const upload = multer({
+    storage: storage,
+    limits: { fileSize: 1000000 }, // 1MB file size limit
+    fileFilter: function (req, file, cb) {
+      checkFileType(file, cb);
+    }
+  }).single('image');
 
+  // Check File Type
+function checkFileType(file, cb) {
+    const filetypes = /jpeg|jpg|png|gif/;
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = filetypes.test(file.mimetype);
+  
+    if (mimetype && extname) {
+      return cb(null, true);
+    } else {
+      cb('Error: Images Only!');
+    }
+  }
 
+// +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-// console.log('-----------------');
-// console.log( res.locals.user);
-// console.log('-----------------');
-
-
-//     // res.locals.user = req.user || null;
-//     // res.locals.success = req.flash('success');
-//     // res.locals.error = req.flash('error');
-//     next();
-// });
 
 // Router setup
 const mainRouter = require('./routes');

@@ -26,8 +26,8 @@ const loginCheck = async (req, res) => {
             const match = await bcrypt.compare(userPassword, dbPassword);
             if (match) {
                 console.log('match');
-                const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, {
-                    expiresIn: '1h', // Token expires in 1 hour
+                const token = jwt.sign({ id: checkUser._id, email: checkUser.email }, JWT_SECRET, {
+                    expiresIn: '5h',
                 });
 
 
