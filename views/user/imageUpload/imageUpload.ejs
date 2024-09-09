@@ -1,0 +1,16 @@
+<%- include('../partials/header') %>
+
+    <section class="section">
+        <div class="container">
+            <h1 class="title">Upload Image</h1>
+
+            <form action="/image-upload" method="POST" enctype="multipart/form-data">
+                <input class="file-input" type="file" name="image">
+                <button type="submit" class="button is-primary mt-4">Upload</button>
+            </form>
+
+
+        </div>
+    </section>
+
+    <%- include('../partials/footer') %>
